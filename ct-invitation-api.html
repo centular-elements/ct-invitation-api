@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../ct-core-utils/ct-api-provider-behaviour.html">
 
 <!--
 `ct-invitation-api`
@@ -9,25 +11,22 @@ API for invitation management
 
 <dom-module id="ct-invitation-api">
   <template>
-    <style>
-      :host {
-        display: block;
-      }
-    </style>
-    <h2>Hello [[prop1]]!</h2>
-  </template>
 
   <script>
     Polymer({
 
       is: 'ct-invitation-api',
+        behaviors: [CT.Behaviours.ApiProvider],
 
-      properties: {
-        prop1: {
-          type: String,
-          value: 'ct-invitation-api',
-        },
-      },
+        /**
+         * Get a user by id
+         *
+         * @returns {Promise}
+         */
+        getUser: function(id) {
+            this.$.getUser.url = this._url('/user/' + id);
+            return this._generateRequest(this.$.getUser);
+        }
 
     });
   </script>
