@@ -42,7 +42,7 @@ API for invitation management
              */
 
             inviteUser: function(params) {
-                this.$.inviteUser.url = this._url('/invitation');
+                this.$.inviteUser.url = this._url('/invitations');
                 this.$.inviteUser.metod = 'POST';
                 this.$.inviteUser.contentType = "application/json";
                 this.$.inviteUser.body = params;
@@ -59,7 +59,7 @@ API for invitation management
              */
 
             acceptInvitation: function(inviteId) {
-                this.$.acceptInvitation.url = this._url('/invitation/' + id + '/accept');
+                this.$.acceptInvitation.url = this._url('/invitations/' + id + '/accept');
                 this.$.acceptInvitation.metod = 'PUT';
                 this.$.acceptInvitation.contentType = "application/json";
                 this.$.acceptInvitation.body = params;
@@ -76,7 +76,7 @@ API for invitation management
              */
 
             declineInvitation: function(inviteId) {
-                this.$.acceptInvitation.url = this._url('/invitation/' + id + '/decline');
+                this.$.acceptInvitation.url = this._url('/invitations/' + id + '/decline');
                 this.$.acceptInvitation.metod = 'PUT';
                 this.$.acceptInvitation.contentType = "application/json";
                 this.$.acceptInvitation.body = params;
