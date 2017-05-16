@@ -14,78 +14,107 @@ API for invitation management
 
     <ct-user-identity id="identity"></ct-user-identity>
 
+    <iron-ajax id="getUserInvitations"></iron-ajax>
     <iron-ajax id="inviteUser"></iron-ajax>
     <iron-ajax id="acceptInvitation"></iron-ajax>
     <iron-ajax id="declineInvitation"></iron-ajax>
 
-    <script>
-        Polymer({
+  </template>
 
-            is: 'ct-invitation-api',
-            behaviors: [CT.Behaviours.ApiProvider],
+  <script>
+      Polymer({
 
-            /**
-             * Send an invitation
-             *
-             * @param {Object[]} params
-             * @param {String} [params[].clientId]
-             * @param {String} [params[].userId]
-             * @param {String} params[].firstName
-             * @param {String} params[].lastName
-             * @param {String} [params[].group]
-             *
-             * @param {Object[]} params[].contacts
-             * @param {String} params[].contacts[].contact
-             * @param {String} params[].contacts[].contactType
-             *
-             * @returns {Promise}
-             */
+          is: 'ct-invitation-api',
 
-            inviteUser: function(params) {
-                this.$.inviteUser.url = this._url('/invitation');
-                this.$.inviteUser.metod = 'POST';
-                this.$.inviteUser.contentType = "application/json";
-                this.$.inviteUser.body = params;
+          /**
+           * Get a list of invitations
+           *
+           * @param {Boolean} [sent=false] - Get invitations sent by the current user, else invitations received from other users
+           * @param {String} pageNum=0
+           * @param {String} [pageSize=20]
+           *
+           * @returns {Promise}
+           */
+          behaviors: [CT.Behaviours.ApiProvider],
 
-                return this._generateRequest(this.$.inviteUser);
-            },
+          getUserInvitations : function(sent, pageNum, pageSize){
 
-            /**
-             * Accept an invitation
-             *
-             * @param {String} inviteId
-             *
-             * @returns {Promise}
-             */
+              var pageNum = pageNum || 0,
+                  pageSize = pageSize || 20,
+                  sent = sent || false,
+                  params = '';
 
-            acceptInvitation: function(inviteId) {
-                this.$.acceptInvitation.url = this._url('/invitation/' + id + '/accept');
-                this.$.acceptInvitation.metod = 'PUT';
-                this.$.acceptInvitation.contentType = "application/json";
-                this.$.acceptInvitation.body = params;
+              params += '?sent='+sent;
+              params += '&page_number='+pageNum;
+              params += '&page_size='+pageSize;
 
-                return this._generateRequest(this.$.acceptInvitation);
-            },
+              this.$.getUserInvitations.url = this._url('/invitations'+params);
+              return this._generateRequest(this.$.getUserInvitations);
+          },
 
-            /**
-             * Decline an invitation
-             *
-             * @param {String} inviteId
-             *
-             * @returns {Promise}
-             */
+          /**
+           * Send an invitation
+           *
+           * @param {Object[]} params
+           * @param {String} [params[].clientId]
+           * @param {String} [params[].userId]
+           * @param {String} params[].firstName
+           * @param {String} params[].lastName
+           * @param {String} [params[].group]
+           *
+           * @param {Object[]} params[].contacts
+           * @param {String} params[].contacts[].contact
+           * @param {String} params[].contacts[].contactType
+           *
+           * @returns {Promise}
+           */
 
-            declineInvitation: function(inviteId) {
-                this.$.acceptInvitation.url = this._url('/invitation/' + id + '/decline');
-                this.$.acceptInvitation.metod = 'PUT';
-                this.$.acceptInvitation.contentType = "application/json";
-                this.$.acceptInvitation.body = params;
+          inviteUser: function(params) {
+              this.$.inviteUser.url = this._url('/invitations');
+              this.$.inviteUser.method = 'POST';
+              this.$.inviteUser.contentType = "application/json";
+              this.$.inviteUser.body = params;
 
-                return this._generateRequest(this.$.acceptInvitation);
-            },
+              return this._generateRequest(this.$.inviteUser);
+          },
+
+          /**
+           * Accept an invitation
+           *
+           * @param {String} inviteId
+           *
+           * @returns {Promise}
+           */
+
+          acceptInvitation: function(inviteId) {
+              this.$.acceptInvitation.url = this._url('/invitations/' + id + '/accept');
+              this.$.acceptInvitation.metod = 'PUT';
+              this.$.acceptInvitation.contentType = "application/json";
+              this.$.acceptInvitation.body = params;
+
+              return this._generateRequest(this.$.acceptInvitation);
+          },
+
+          /**
+           * Decline an invitation
+           *
+           * @param {String} inviteId
+           *
+           * @returns {Promise}
+           */
+
+          declineInvitation: function(inviteId) {
+              this.$.acceptInvitation.url = this._url('/invitations/' + id + '/decline');
+              this.$.acceptInvitation.metod = 'PUT';
+              this.$.acceptInvitation.contentType = "application/json";
+              this.$.acceptInvitation.body = params;
+
+              return this._generateRequest(this.$.acceptInvitation);
+          },
 
 
 
-        });
-    </script>
+      });
+  </script>
+
 </dom-module>
